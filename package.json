@@ -2,7 +2,16 @@
   "name": "sarathi",
   "version": "0.1.0",
   "description": "Silent AI co-pilot for BrightChamps teachers during live coding classes",
+  "author": "Suneet Jagdev",
+  "license": "UNLICENSED",
+  "private": true,
   "main": "src/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/loadingpeacefully/sarathi.git"
+  },
+  "homepage": "https://loadingpeacefully.github.io/sarathi/",
+  "keywords": ["electron", "ai", "education", "teacher-tools", "brightchamps", "claude", "overlay"],
   "scripts": {
     "start": "electron ."
   },
