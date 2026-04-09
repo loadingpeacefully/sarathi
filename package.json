@@ -1,0 +1,13 @@
+{
+  "name": "sarathi",
+  "version": "0.1.0",
+  "description": "Silent AI co-pilot for BrightChamps teachers during live coding classes",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "electron": "^33.3.1"
+  }
+}

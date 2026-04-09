@@ -1,0 +1,58 @@
+{
+  "lesson_title": "App Development",
+  "topics_covered": "Event blocks, setTimeout blocks",
+  "objective": "Create a \u2018Fun Rainbow\u2019 project using the code blocks.",
+  "tool": "code.org",
+  "duration_mins": 55,
+  "concept_definitions": [
+    {
+      "concept": "Events",
+      "definition": "Events blocks are like magical triggers that make your program respond to things happening around you! You can make things happen when you click a button, press a key, or even touch a sprite. It's all about creating interactive programs that come to life! For example, you can use the onEvent block to tell your program what to do when a specific event happens. It's like giving a secret code to your computer or device, and it knows exactly what to do when it sees that code. Remember, with events b"
+    },
+    {
+      "concept": "setTimeout",
+      "definition": "The setTimeout function is like a timer that allows us to delay the execution of a code block. It doesn't stop other code from running, but it schedules a specific function to be called after a certain time has passed. \u000bFor example, think of it like a bank login that gets disabled if you take too long to enter your password. The setTimeout function helps us achieve such timing effects in our programs."
+    }
+  ],
+  "warmup_qa": [
+    {
+      "q": "How do we go to another screen in our project?",
+      "a": "We use a special code block called \"setScreen\"."
+    },
+    {
+      "q": "How did we show that an answer was wrong?",
+      "a": "We made the button's background turn red!"
+    },
+    {
+      "q": "What was your favorite part of creating our project?",
+      "a": "Select any color for the screen from the properties section.\nWhat is a SetImeout function?[2 marks]Answer: The setTimeout function is used to delay the execution of a piece of code.\n In which format time is displayed in the settimeout function? [2 marks]\nAnswer: Milliseconds.\nWhat is the RGB color code for Red color ? [2 marks]\nAnswer: RGB(255,0,0).\n(This is an assessment to recall the concepts learnt so far. Follow the checkpoint after this).\n\n\u2039#\u203a\n\n### Notes:\n\n<!-- Slide number: 21 -->\n\n![object 14](GoogleShape719p36.jpg)\n\n![object 15](GoogleShape720p36.jpg)\n\n![object 16](GoogleShape721p36.jpg)\n\n1 min\n\nCheckpoint 1\n\n![object 26](GoogleShape734p36.jpg)\n\n![object 25](GoogleShape733p36.jpg)\nEvaluate the understanding / learning level of the student.\nIf the Score is between 0-3 then he/she is a slow learner. Explain the concepts again according to Assessment 1 and then  go to this slide.\n       If the Score is between 4-5 then the learner is a medium learner. Keep working on\n       the activities in natural flow. Go to this slide.\n       If the Score is between 6-8 then the learner is a fast learner. Keep working on\n      the activities in natural flow. Go to this slide.\n\n![object 27](GoogleShape735p36.jpg)\n\n![object 10](GoogleShape711p36.jpg)\n\n![object 8](GoogleShape709p36.jpg)\n\n![object 9](GoogleShape710p36.jpg)\n\n![object 28](GoogleShape736p36.jpg)\n\n![object 30](GoogleShape738p36.jpg)\n\u2039#\u203a\n\n![object 29](GoogleShape737p36.jpg)\n\n### Notes:\n\n<!-- Slide number: 22 -->\n\n![object 14](GoogleShape763p37.jpg)\n\n![object 15](GoogleShape764p37.jpg)\n\n![object 16](GoogleShape765p37.jpg)\n\n10 mins\n\nFun Activity 1\n\n![object 26](GoogleShape778p37.jpg)\n\n![object 25](GoogleShape777p37.jpg)\n\n![object 27](GoogleShape779p37.jpg)\n\n![object 10](GoogleShape755p37.jpg)\n\n![object 8](GoogleShape753p37.jpg)\n\n![object 9](GoogleShape754p37.jpg)\n\n![object 28](GoogleShape780p37.jpg)\n\n![object 30](GoogleShape782p37.jpg)\n\u2039#\u203a\n\n![object 29](GoogleShape781p37.jpg)\n\n### Notes:\n\n<!-- Slide number: 23 -->\n\nFun Activity\n\n![](GoogleShape811p38.jpg)\nIt\u2019s time to refresh ourselves with a cool activity! I have an interesting activity for you!\n\n(Share the link with the student & Ask the student to open the link).\n\n### Notes:\n\n<!-- Slide number: 24 -->\n\nCoding the App\n\n![](GoogleShape841p39.jpg)\n\nWhen the button is clicked, set the background color of the screen to Violet by using RGB code(148,0,211).Display the color name in the label.\nPlay  Forest nature sound using the mp3 file.\nAfter 1000 milliseconds change the color of the screen to Indigo using the RGB(75,0,130)\n\n### Notes:\n\n<!-- Slide number: 25 -->\n\nCoding the App\n\n![](GoogleShape873p40.jpg)\n\nAfter 3000 milliseconds change the color of the screen to Blue using the RGB(0,0,255)\nAfter 6000 milliseconds change the color of the screen to Green using the RGB(0,255,0)\n\n### Notes:\n\n<!-- Slide number: 26 -->\n\nCoding the App\n\n![](GoogleShape904p41.jpg)\n\nAfter 8000 milliseconds change the color of the screen to Yellow using the RGB(255,255,0)\nAfter 6000 milliseconds change the color of the screen to Green using the RGB(255,127,0)\n\n### Notes:\n\n<!-- Slide number: 27 -->\n\nCoding the App\n\n![](GoogleShape934p42.jpg)\n\nAfter 12000 milliseconds change the color of the screen to Red using the RGB(0,0,255)\nAfter 14000 milliseconds add the Rainbow-bg.png image file on the screen.\n\n### Notes:\n\n<!-- Slide number: 28 -->\n\nAssessment 2\n\nAsk the student the following"
+    }
+  ],
+  "checkpoint_qa": [
+    {
+      "q": "How to background color of the screen?",
+      "a": "Select any color for the screen from the properties section.",
+      "marks": 2
+    },
+    {
+      "q": "What is a SetImeout function?",
+      "a": "The setTimeout function is used to delay the execution of a piece of code.",
+      "marks": 2
+    },
+    {
+      "q": "In which format time is displayed in the settimeout function?",
+      "a": "Milliseconds.",
+      "marks": 2
+    },
+    {
+      "q": "What is the RGB color code for Red color ?",
+      "a": "RGB(255,0,0).",
+      "marks": 2
+    }
+  ],
+  "common_errors": [
+    "Wrong RGB values for colors \u2014 remember RGB(255,0,0) is red",
+    "Using seconds instead of milliseconds (e.g. writing 5 instead of 5000)",
+    "Forgetting the callback function argument in setTimeout"
+  ]
+}

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sārathi Overlay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── RESET ─────────────────────────────────────────────── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: transparent;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-app-region: no-drag;
+    }
+
+    /* ── ANNOTATION CANVAS ─────────────────────────────────── */
+    #annotation-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── PANEL ─────────────────────────────────────────────── */
+    #panel {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 360px;
+      background: rgba(255, 255, 255, 0.70);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 16px;
+      border-top: 3px solid #4D3BC2;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+    }
+
+    #panel.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── PANEL HEADER (drag handle) ────────────────────────── */
+    #panel-header {
+      padding: 12px 16px 8px;
+      border-bottom: 1px solid #C1CCD7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: grab;
+    }
+
+    #panel-header:active { cursor: grabbing; }
+
+    #panel-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #4D3BC2;
+    }
+
+    #lesson-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: #7D8892;
+    }
+
+    #dismiss-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #8499AE;
+      font-size: 18px;
+      line-height: 1;
+      padding: 2px 4px;
+    }
+
+    #dismiss-btn:hover { color: #51667B; }
+
+    /* ── PANEL BODY (scrollable content area) ──────────────── */
+    #panel-body {
+      max-height: 340px;
+      overflow-y: auto;
+    }
+
+    /* ── LOADING STATE ─────────────────────────────────────── */
+    #loading-state {
+      padding: 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #7D8892;
+      display: none;
+    }
+
+    /* ── THINKING STATE ────────────────────────────────────── */
+    #thinking-state {
+      padding: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #4D3BC2;
+      display: none;
+    }
+
+    .thinking-dots::after {
+      content: '';
+      animation: dots 1.4s steps(4, end) infinite;
+    }
+
+    @keyframes dots {
+      0%  { content: ''; }
+      25% { content: '.'; }
+      50% { content: '..'; }
+      75% { content: '...'; }
+    }
+
+    /* ── OPTIONS LIST ──────────────────────────────────────── */
+    #options-list {
+      padding: 8px 0;
+      display: none;
+    }
+
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 10px 16px;
+      background: none;
+      border: none;
+      border-bottom: 1px solid #C1CCD7;
+      text-align: left;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #222A33;
+      cursor: pointer;
+      transition: background 0.08s;
+      line-height: 1.4;
+    }
+
+    .option-btn:last-child { border-bottom: none; }
+    .option-btn:hover { background: #EDEBF9; }
+
+    .option-btn .option-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: #EDEBF9;
+      font-size: 11px;
+      font-weight: 800;
+      color: #4D3BC2;
+      margin-right: 8px;
+    }
+
+    /* ── INPUT ROW (options state + follow-up) ─────────────── */
+    .input-row {
+      padding: 8px 16px 12px;
+      border-top: 1px solid #C1CCD7;
+      display: none;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .input-row.visible { display: flex; }
+
+    .input-row input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #C1CCD7;
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: #222A33;
+      outline: none;
+      background: #F8F7FA;
+    }
+
+    .input-row input:focus {
+      border-color: #4D3BC2;
+      background: #fff;
+    }
+
+    .input-row input::placeholder { color: #8499AE; }
+
+    .input-row button {
+      padding: 8px 14px;
+      background: #4D3BC2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.08s;
+      white-space: nowrap;
+    }
+
+    .input-row button:hover { background: #3d2ea0; }
+
+    /* ── RESPONSE AREA (inline in panel) ───────────────────── */
+    #response-area {
+      display: none;
+    }
+
+    #response-label {
+      padding: 10px 16px 6px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: #4D3BC2;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid #C1CCD7;
+    }
+
+    #response-text {
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #3D4D5D;
+      line-height: 1.6;
+    }
+
+    #response-text strong { font-weight: 800; color: #222A33; }
+    #response-text em { font-style: italic; }
+    #response-text ul { list-style: disc; }
+    #response-text li { margin-bottom: 2px; }
+
+    /* ── ERROR STATE ───────────────────────────────────────── */
+    #error-state {
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #FF4433;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Annotation canvas -->
+<canvas id="annotation-canvas"></canvas>
+
+<!-- Single panel — all states live here -->
+<div id="panel">
+  <div id="panel-header">
+    <span id="panel-title">Sārathi</span>
+    <span id="lesson-name"></span>
+    <button id="dismiss-btn" onclick="dismissPanel()">×</button>
+  </div>
+
+  <div id="panel-body">
+    <div id="loading-state">Sārathi is looking at your screen…</div>
+
+    <div id="thinking-state">Sārathi is thinking<span class="thinking-dots"></span></div>
+
+    <div id="options-list"></div>
+
+    <div id="open-input-row" class="input-row">
+      <input id="open-input" type="text" placeholder="Ask anything about this lesson…" maxlength="200" />
+      <button onclick="submitOpenQuestion()">Ask</button>
+    </div>
+
+    <div id="response-area">
+      <div id="response-label">Response</div>
+      <div id="response-text"></div>
+    </div>
+
+    <div id="followup-row" class="input-row">
+      <input id="followup-input" type="text" placeholder="Ask a follow-up…" maxlength="200" />
+      <button onclick="submitFollowup()">Ask</button>
+    </div>
+
+    <div id="error-state"></div>
+  </div>
+</div>
+
+<script>
+  const { ipcRenderer } = require('electron')
+
+  // ── STATE ─────────────────────────────────────────────────
+
+  // Panel states: 'hidden' | 'loading' | 'options' | 'thinking' | 'response' | 'error'
+  let panelState = 'hidden'
+  let autoDismissTimer = null
+
+  // ── DOM REFS ──────────────────────────────────────────────
+
+  const panel = document.getElementById('panel')
+  const panelHeader = document.getElementById('panel-header')
+  const loadingState = document.getElementById('loading-state')
+  const thinkingState = document.getElementById('thinking-state')
+  const optionsList = document.getElementById('options-list')
+  const openInputRow = document.getElementById('open-input-row')
+  const openInput = document.getElementById('open-input')
+  const responseArea = document.getElementById('response-area')
+  const responseText = document.getElementById('response-text')
+  const followupRow = document.getElementById('followup-row')
+  const followupInput = document.getElementById('followup-input')
+  const errorState = document.getElementById('error-state')
+  const lessonName = document.getElementById('lesson-name')
+  const canvas = document.getElementById('annotation-canvas')
+  const ctx = canvas.getContext('2d')
+
+  canvas.width = window.screen.width
+  canvas.height = window.screen.height
+
+  // ── STATE MACHINE ─────────────────────────────────────────
+
+  function setPanelState (newState) {
+    panelState = newState
+
+    // Panel visibility
+    if (newState === 'hidden') {
+      panel.classList.remove('visible')
+    } else {
+      panel.classList.add('visible')
+    }
+
+    // Toggle inner sections
+    loadingState.style.display = newState === 'loading' ? 'block' : 'none'
+    thinkingState.style.display = newState === 'thinking' ? 'block' : 'none'
+    optionsList.style.display = newState === 'options' ? 'block' : 'none'
+    openInputRow.classList.toggle('visible', newState === 'options')
+    responseArea.style.display = newState === 'response' ? 'block' : 'none'
+    followupRow.classList.toggle('visible', newState === 'response')
+    errorState.style.display = newState === 'error' ? 'block' : 'none'
+
+    // Auto-dismiss only in options state
+    if (newState === 'options') {
+      startAutoDismissTimer()
+    } else {
+      clearAutoDismissTimer()
+    }
+
+    // Click-through: enabled only when hidden
+    ipcRenderer.send('set-click-through', newState === 'hidden')
+
+    // Focus the right input
+    if (newState === 'options') {
+      openInput.focus()
+    } else if (newState === 'response') {
+      followupInput.focus()
+    }
+  }
+
+  // ── IPC LISTENERS ─────────────────────────────────────────
+
+  ipcRenderer.on('show-loading', (event, { cursorX, cursorY }) => {
+    positionPanelNearCursor(cursorX, cursorY)
+    optionsList.innerHTML = ''
+    openInput.value = ''
+    setPanelState('loading')
+  })
+
+  ipcRenderer.on('show-panel', (event, { options, cursorX, cursorY }) => {
+    positionPanelNearCursor(cursorX, cursorY)
+    populateOptions(options)
+    setPanelState('options')
+  })
+
+  ipcRenderer.on('show-response', (event, { text }) => {
+    responseText.innerHTML = formatResponse(text)
+    followupInput.value = ''
+    setPanelState('response')
+  })
+
+  ipcRenderer.on('draw-pointer', (event, { x, y }) => {
+    drawPointer(x, y)
+  })
+
+  ipcRenderer.on('clear', () => {
+    clearAll()
+  })
+
+  ipcRenderer.on('show-error', (event, { message }) => {
+    errorState.textContent = message
+    setPanelState('error')
+  })
+
+  // ── DRAG TO MOVE ──────────────────────────────────────────
+
+  let isDragging = false
+  let dragOffsetX = 0
+  let dragOffsetY = 0
+
+  panelHeader.addEventListener('mousedown', (e) => {
+    if (e.target.id === 'dismiss-btn') return
+    isDragging = true
+    dragOffsetX = e.clientX - panel.getBoundingClientRect().left
+    dragOffsetY = e.clientY - panel.getBoundingClientRect().top
+    e.preventDefault()
+  })
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return
+    panel.style.left = (e.clientX - dragOffsetX) + 'px'
+    panel.style.top = (e.clientY - dragOffsetY) + 'px'
+    panel.style.right = 'auto'
+  })
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false
+  })
+
+  // ── SMART CLICK-THROUGH ──────────────────────────────────
+
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) return
+    const overPanel = panelState !== 'hidden' && panel.contains(e.target)
+    ipcRenderer.send('set-click-through', !overPanel)
+  })
+
+  // ── CURSOR POSITIONING ────────────────────────────────────
+
+  function positionPanelNearCursor (cursorX, cursorY) {
+    const panelWidth = 360
+    const margin = 20
+
+    let left = cursorX + margin
+    let top = cursorY - margin
+
+    if (left + panelWidth > window.screen.width) {
+      left = cursorX - panelWidth - margin
+    }
+    if (top < 0) top = margin
+    if (left < 0) left = margin
+
+    panel.style.left = left + 'px'
+    panel.style.top = top + 'px'
+    panel.style.right = 'auto'
+  }
+
+  // ── OPTIONS ───────────────────────────────────────────────
+
+  function populateOptions (options) {
+    optionsList.innerHTML = ''
+    options.forEach((optionText, index) => {
+      const btn = document.createElement('button')
+      btn.className = 'option-btn'
+      btn.innerHTML = `<span class="option-num">${index + 1}</span>${optionText}`
+      btn.onclick = () => submitOption(optionText)
+      optionsList.appendChild(btn)
+    })
+  }
+
+  // ── SUBMIT HANDLERS ───────────────────────────────────────
+
+  function submitOption (question) {
+    setPanelState('thinking')
+    ipcRenderer.send('submit-question', { question })
+  }
+
+  function submitOpenQuestion () {
+    const question = openInput.value.trim()
+    if (!question) return
+    setPanelState('thinking')
+    ipcRenderer.send('submit-question', { question })
+  }
+
+  function submitFollowup () {
+    const question = followupInput.value.trim()
+    if (!question) return
+    setPanelState('thinking')
+    ipcRenderer.send('submit-question', { question })
+  }
+
+  function dismissPanel () {
+    clearCanvas()
+    setPanelState('hidden')
+    ipcRenderer.send('dismiss-panel')
+  }
+
+  // ── KEYBOARD SHORTCUTS ────────────────────────────────────
+
+  document.addEventListener('keydown', (e) => {
+    // 1/2/3 — select option (only in options state)
+    if (panelState === 'options' && ['1', '2', '3'].includes(e.key)) {
+      const buttons = optionsList.querySelectorAll('.option-btn')
+      const index = parseInt(e.key) - 1
+      if (buttons[index]) buttons[index].click()
+      return
+    }
+
+    // Enter — submit from whichever input is focused
+    if (e.key === 'Enter') {
+      if (panelState === 'options' && document.activeElement === openInput) {
+        submitOpenQuestion()
+        return
+      }
+      if (panelState === 'response' && document.activeElement === followupInput) {
+        submitFollowup()
+        return
+      }
+    }
+
+    // Escape — dismiss from any state
+    if (e.key === 'Escape' && panelState !== 'hidden') {
+      dismissPanel()
+      return
+    }
+  })
+
+  // ── AUTO-DISMISS ──────────────────────────────────────────
+
+  function startAutoDismissTimer () {
+    clearAutoDismissTimer()
+    autoDismissTimer = setTimeout(() => {
+      dismissPanel()
+    }, 10000)
+  }
+
+  function clearAutoDismissTimer () {
+    if (autoDismissTimer) {
+      clearTimeout(autoDismissTimer)
+      autoDismissTimer = null
+    }
+  }
+
+  // ── RESPONSE FORMATTER ─────────────────────────────────────
+
+  function formatResponse (text) {
+    // Escape HTML first
+    let html = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+
+    // Bold: **text** or __text__
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    html = html.replace(/__(.+?)__/g, '<strong>$1</strong>')
+
+    // Italic: *text* or _text_
+    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>')
+
+    // Inline code: `code`
+    html = html.replace(/`(.+?)`/g, '<code style="background:#EDEBF9;padding:1px 4px;border-radius:3px;font-size:12px;">$1</code>')
+
+    // Bullet points: lines starting with - or *
+    html = html.replace(/^[\-\*]\s+(.+)$/gm, '<li>$1</li>')
+    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul style="margin:4px 0 4px 16px;padding:0;">$&</ul>')
+
+    // Numbered lists: lines starting with 1. 2. etc
+    html = html.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>')
+
+    // Line breaks
+    html = html.replace(/\n/g, '<br>')
+
+    // Clean up <br> inside lists
+    html = html.replace(/<\/li><br>/g, '</li>')
+    html = html.replace(/<br><li>/g, '<li>')
+
+    return html
+  }
+
+  // ── ANNOTATION CANVAS ─────────────────────────────────────
+
+  // Claude outputs coordinates in 1920x1080 (screenshot resolution).
+  // Scale to actual screen size so circles land on the right spot.
+  const SCREENSHOT_W = 1920
+  const SCREENSHOT_H = 1080
+
+  function drawPointer (x, y) {
+    const scaleX = canvas.width / SCREENSHOT_W
+    const scaleY = canvas.height / SCREENSHOT_H
+    const sx = x * scaleX
+    const sy = y * scaleY
+
+    let opacity = 1.0
+
+    function render () {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.save()
+
+      // Draw a purple cursor pointer at the target location
+      // The tip of the cursor points exactly at (sx, sy)
+      ctx.translate(sx, sy)
+
+      // Cursor shape (standard pointer arrow, scaled up for visibility)
+      const size = 1.6
+      ctx.beginPath()
+      ctx.moveTo(0, 0)                    // tip
+      ctx.lineTo(0, 24 * size)            // down
+      ctx.lineTo(6.5 * size, 18 * size)   // notch right
+      ctx.lineTo(11 * size, 28 * size)    // handle bottom-right
+      ctx.lineTo(15 * size, 26 * size)    // handle top-right
+      ctx.lineTo(10 * size, 16 * size)    // handle top
+      ctx.lineTo(17 * size, 16 * size)    // wing right
+      ctx.closePath()
+
+      // Fill with purple
+      ctx.fillStyle = `rgba(77, 59, 194, ${opacity})`
+      ctx.fill()
+
+      // White outline so it's visible on any background
+      ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`
+      ctx.lineWidth = 2
+      ctx.setLineDash([])
+      ctx.stroke()
+
+      // Small pulsing ring around the tip for emphasis
+      ctx.beginPath()
+      ctx.arc(0, 0, 8, 0, 2 * Math.PI)
+      ctx.fillStyle = `rgba(77, 59, 194, ${opacity * 0.3})`
+      ctx.fill()
+
+      ctx.restore()
+    }
+
+    render()
+
+    // Pulse the ring 3 times then hold steady
+    let pulseCount = 0
+    const pulseInterval = setInterval(() => {
+      pulseCount++
+      if (pulseCount >= 6) clearInterval(pulseInterval)
+    }, 300)
+
+    // Fade out after 7 seconds
+    setTimeout(() => {
+      const fadeInterval = setInterval(() => {
+        opacity -= 0.05
+        if (opacity <= 0) {
+          clearInterval(fadeInterval)
+          clearCanvas()
+        } else {
+          render()
+        }
+      }, 50)
+    }, 7000)
+  }
+
+  function clearCanvas () {
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+  }
+
+  function clearAll () {
+    setPanelState('hidden')
+    clearCanvas()
+  }
+</script>
+</body>
+</html>

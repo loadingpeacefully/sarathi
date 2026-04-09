@@ -1,0 +1,56 @@
+{
+  "lesson_title": "App Development",
+  "topics_covered": "Event blocks, variables, sprites",
+  "objective": "Create a \u2018Bird and the Balloons\u2019 project using the code blocks.",
+  "tool": "code.org",
+  "duration_mins": 55,
+  "concept_definitions": [
+    {
+      "concept": "Sprites",
+      "definition": "Sprite Lab is a block-based programming environment where you can make simple animations and games with objects and characters that interact with each other. Create an animation or game then share your app in seconds."
+    }
+  ],
+  "warmup_qa": [
+    {
+      "q": "What are the sprites?",
+      "a": "Sprites are the characters or animations that we add in the project."
+    },
+    {
+      "q": "How can we reduce the problem of writing the same code multiple times?",
+      "a": "We can make use of the loops."
+    },
+    {
+      "q": "What was your favorite part of creating our project?",
+      "a": "Repeat loop.\nWhat are sprite behaviors?[2 marks]Answer: Behaviors are pre-defined sets of actions that a sprite can perform over and over.\n Where did we store the game points? [2 marks]\nAnswer:In a score variable.\nWhat are the different types of events added to move the bird  ? [2 marks]\nAnswer: Key pressed events.\n(This is an assessment to recall the concepts learnt so far. Follow the checkpoint after this).\n\n\u2039#\u203a\n\n### Notes:\n\n<!-- Slide number: 21 -->\n\n![object 14](GoogleShape735p36.jpg)\n\n![object 15](GoogleShape736p36.jpg)\n\n![object 16](GoogleShape737p36.jpg)\n\n1 min\n\nCheckpoint 1\n\n![object 26](GoogleShape750p36.jpg)\n\n![object 25](GoogleShape749p36.jpg)\nEvaluate the understanding / learning level of the student.\nIf the Score is between 0-3 then he/she is a slow learner. Explain the concepts again according to Assessment 1 and then  go to this slide.\n       If the Score is between 4-5 then the learner is a medium learner. Keep working on\n       the activities in natural flow. Go to this slide.\n       If the Score is between 6-8 then the learner is a fast learner. Keep working on\n      the activities in natural flow. Go to this slide.\n\n![object 27](GoogleShape751p36.jpg)\n\n![object 10](GoogleShape727p36.jpg)\n\n![object 8](GoogleShape725p36.jpg)\n\n![object 9](GoogleShape726p36.jpg)\n\n![object 28](GoogleShape752p36.jpg)\n\n![object 30](GoogleShape754p36.jpg)\n\u2039#\u203a\n\n![object 29](GoogleShape753p36.jpg)\n\n### Notes:\n\n<!-- Slide number: 22 -->\n\n![object 14](GoogleShape779p37.jpg)\n\n![object 15](GoogleShape780p37.jpg)\n\n![object 16](GoogleShape781p37.jpg)\n\n10 mins\n\nFun Activity 1\n\n![object 26](GoogleShape794p37.jpg)\n\n![object 25](GoogleShape793p37.jpg)\n\n![object 27](GoogleShape795p37.jpg)\n\n![object 10](GoogleShape771p37.jpg)\n\n![object 8](GoogleShape769p37.jpg)\n\n![object 9](GoogleShape770p37.jpg)\n\n![object 28](GoogleShape796p37.jpg)\n\n![object 30](GoogleShape798p37.jpg)\n\u2039#\u203a\n\n![object 29](GoogleShape797p37.jpg)\n\n### Notes:\n\n<!-- Slide number: 23 -->\n\nFun Activity 1\n\n![](GoogleShape827p38.jpg)\nIt\u2019s time to refresh ourselves with a cool activity! I have a\n\u201cTurtle Wax\u201d  for you!\n(Share the link with the student & Ask the student to open the link).\n\nClick and drag the turtle to adjust the slide. Release to send the turtle down the slide.\n\nAdjust the height of the ladder to try to land on the target. Land on the target three times to win!\n\n### Notes:\n\n<!-- Slide number: 24 -->\n\nCoding the App\n\nCode Blocks when Birdie touches GreenBallooon\n\nWhen the birdie touches green balloon, increment the score by 1.\nPlay a bubble pop sound\nDisplay which color balloon is  popped !\nDisplay the score also.\nMake the balloon jump to random locations.\n\n![](GoogleShape858p39.jpg)\n\n### Notes:\n\n<!-- Slide number: 25 -->\n\nCoding the App\n\n Code Blocks when Birdie touches YellowBallooon\n\nWhen the birdie touches yellow balloon, increment the score by 1.\nPlay a bubble pop sound\nDisplay which color balloon is  popped !\nDisplay the score also.\nMake the balloon jump to random locations.\n\n![](GoogleShape890p40.jpg)\n\n### Notes:\n\n<!-- Slide number: 26 -->\n\nCoding the App\n\nCode Blocks when Birdie touches BlueBallooon\n\nWhen the birdie touches blue balloon, increment the score by 1.\nPlay a bubble pop sound\nDisplay which color balloon is  popped !\nDisplay the score also.\nMake the balloon jump to random locations.\n\n![](GoogleShape922p41.jpg)\n\n### Notes:\n\n<!-- Slide number: 27 -->\n\nAssessment 2\n\nAsk the student the following"
+    }
+  ],
+  "checkpoint_qa": [
+    {
+      "q": "Which loop is used in the project  ?",
+      "a": "Repeat loop.",
+      "marks": 2
+    },
+    {
+      "q": "What are sprite behaviors?",
+      "a": "Behaviors are pre-defined sets of actions that a sprite can perform over and over.",
+      "marks": 2
+    },
+    {
+      "q": "Where did we store the game points?",
+      "a": "In a score variable.",
+      "marks": 2
+    },
+    {
+      "q": "What are the different types of events added to move the bird  ?",
+      "a": "Key pressed events.",
+      "marks": 2
+    }
+  ],
+  "common_errors": [
+    "Forgetting to add behaviors to sprites",
+    "Forgetting to initialise the variable before using it",
+    "Not using repeat block for multiple sprites",
+    "Setting sprite size before creating the sprite",
+    "Using the wrong variable name (case-sensitive)"
+  ]
+}

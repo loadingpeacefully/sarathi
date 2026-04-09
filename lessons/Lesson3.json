@@ -1,0 +1,73 @@
+{
+  "lesson_title": "Place Value of Digits",
+  "topics_covered": "Place value, value of digits, comparing numbers, 10 times relationship",
+  "objective": "Understand how the value of a digit depends on its place in a number, and compare multi-digit numbers using place value.",
+  "tool": "BrightChamps Math Platform",
+  "duration_mins": 55,
+  "concept_definitions": [
+    {
+      "concept": "Place Value",
+      "definition": "The value of a digit depends on its position (place) in a number. In 4,382: the 4 is in the thousands place (value = 4,000), the 3 is in the hundreds place (value = 300), the 8 is in the tens place (value = 80), and the 2 is in the ones place (value = 2)."
+    },
+    {
+      "concept": "Value of a Digit",
+      "definition": "The value of a digit is the digit multiplied by its place value. For example, in 365,421: the 3 is in the hundred-thousands place, so its value is 300,000. The 6 is in the ten-thousands place, so its value is 60,000."
+    },
+    {
+      "concept": "10 Times Relationship",
+      "definition": "Each place in a number is 10 times the value of the place to its right. So the thousands place is 10 times the hundreds place. For example, 600,000 is 10 times as much as 60,000. This pattern holds for all place values."
+    },
+    {
+      "concept": "Comparing Numbers",
+      "definition": "To compare multi-digit numbers, start from the leftmost digit and compare place by place. Use > (greater than), < (less than), or = (equal to). For example, 245,136 < 254,136 because when comparing the ten-thousands place, 4 < 5."
+    }
+  ],
+  "warmup_qa": [
+    {
+      "q": "In the number 4,382, what is the value of the digit 3?",
+      "a": "The 3 is in the hundreds place, so its value is 300."
+    },
+    {
+      "q": "How does the place of a digit affect its value?",
+      "a": "Each place is 10 times larger than the one to its right. So the same digit has a different value depending on where it sits in the number."
+    },
+    {
+      "q": "In 326, why is the value of 3 bigger than the value of 6?",
+      "a": "The 3 is in the hundreds place (value = 300), while the 6 is in the ones place (value = 6)."
+    }
+  ],
+  "checkpoint_qa": [
+    {
+      "q": "What is the value of the underlined digit 3 in 365,421?",
+      "a": "300,000 (the 3 is in the hundred-thousands place).",
+      "marks": 2
+    },
+    {
+      "q": "What is the value of the digit 0 in 261,058?",
+      "a": "0 (zero in any place has a value of 0).",
+      "marks": 2
+    },
+    {
+      "q": "600,000 is 10 times as much as what number?",
+      "a": "60,000.",
+      "marks": 2
+    },
+    {
+      "q": "Compare: 245,136 _____ 254,136. Which symbol goes in the blank?",
+      "a": "< (less than), because 4 < 5 in the ten-thousands place.",
+      "marks": 2
+    },
+    {
+      "q": "How does the value of 4 in 4,321 compare to its value in 42?",
+      "a": "The value of 4 in 4,321 is 100 times greater than its value in 42 (4,000 vs 40).",
+      "marks": 2
+    }
+  ],
+  "common_errors": [
+    "Confusing the digit itself with its place value (e.g. saying the value of 6 in 365 is 6 instead of 60)",
+    "Mixing up place names: ones, tens, hundreds, thousands, ten-thousands, hundred-thousands",
+    "Forgetting that 0 in any place always has a value of 0",
+    "Comparing numbers starting from the rightmost digit instead of the leftmost",
+    "Confusing '10 times as much as' with '10 more than' (e.g. 10 times 60,000 = 600,000, not 60,010)"
+  ]
+}
