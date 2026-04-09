@@ -618,6 +618,12 @@
             <span id="fb-lbl-1" class="w-full text-center font-600 text-sm transition-all duration-500" style="color:#2e1065;opacity:0.5;">Interesting</span>
             <span id="fb-lbl-2" class="w-full text-center font-600 text-sm transition-all duration-500" style="color:#2e1065;opacity:0.5;">Ship it!</span>
           </div>
+          <!-- Vote counters -->
+          <div class="flex w-full items-center justify-between pt-1">
+            <span id="fb-count-0" class="w-full text-center font-800 text-xs transition-all duration-500" style="color:#2e1065;opacity:0.5;">0 votes</span>
+            <span id="fb-count-1" class="w-full text-center font-800 text-xs transition-all duration-500" style="color:#2e1065;opacity:0.5;">0 votes</span>
+            <span id="fb-count-2" class="w-full text-center font-800 text-xs transition-all duration-500" style="color:#2e1065;opacity:0.5;">0 votes</span>
+          </div>
         </div>
 
         <!-- Post-feedback message (hidden initially) -->
@@ -630,27 +636,36 @@
     </div>
   </section>
 
+  <style>
+    @keyframes count-pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.6); }
+      100% { transform: scale(1); }
+    }
+    .count-pop { animation: count-pop 0.3s ease-out; }
+  </style>
+
   <script>
     const fbStates = [
       {
         bg: '#8B5CF6', accent: '#2e1065', track: '#7c3aed', path: '#8B5CF6',
         eyeW: 56, eyeH: 56, eyeR: '100%',
         smileRot: 180, indRot: 180, indLeft: '0%',
-        labelX: '0%', labelColor: '#7c3aed',
-        thanks: '', sub: ''
+        labelX: '0%',
+        thanks: 'Honest. Respect that.', sub: 'Not every idea lands — thanks for the candor.'
       },
       {
         bg: '#A78BFA', accent: '#1e1b4b', track: '#7c3aed', path: '#A78BFA',
         eyeW: 100, eyeH: 20, eyeR: '36px',
         smileRot: 180, indRot: 180, indLeft: '50%',
-        labelX: '-100%', labelColor: '#6d28d9',
+        labelX: '-100%',
         thanks: 'Curiosity is a great sign.', sub: 'Happy to walk you through it anytime.'
       },
       {
         bg: '#4ade80', accent: '#052e16', track: '#16a34a', path: '#4ade80',
         eyeW: 120, eyeH: 120, eyeR: '100%',
         smileRot: 0, indRot: 0, indLeft: '100%',
-        labelX: '-200%', labelColor: '#166534',
+        labelX: '-200%',
         thanks: "Say less. Let's build this.", sub: 'That reaction just made the late nights worth it.'
       }
     ]
@@ -658,7 +673,44 @@
     let currentFb = 0
     let fbLocked = false
 
-    function setFeedback(index) {
+    // ── COUNTERS ──────────────────────────────────────────
+    // Seeded with base numbers so it doesn't look empty on first visit
+    const SEED_COUNTS = { 0: 3, 1: 14, 2: 29 }
+
+    function loadCounts () {
+      try {
+        const raw = localStorage.getItem('sarathi-fb-counts')
+        if (raw) return JSON.parse(raw)
+      } catch (e) {}
+      // First visit — seed with base numbers
+      localStorage.setItem('sarathi-fb-counts', JSON.stringify(SEED_COUNTS))
+      return { ...SEED_COUNTS }
+    }
+
+    function saveCounts (counts) {
+      localStorage.setItem('sarathi-fb-counts', JSON.stringify(counts))
+    }
+
+    function renderCounts (counts, accentColor) {
+      for (let i = 0; i < 3; i++) {
+        const el = document.getElementById(`fb-count-${i}`)
+        const n = counts[i] || 0
+        el.textContent = n === 1 ? '1 vote' : `${n} votes`
+        el.style.color = accentColor
+      }
+    }
+
+    function animateCount (index) {
+      const el = document.getElementById(`fb-count-${index}`)
+      el.classList.remove('count-pop')
+      void el.offsetWidth  // force reflow
+      el.classList.add('count-pop')
+      el.style.opacity = '1'
+    }
+
+    // ── MAIN FEEDBACK FUNCTION ────────────────────────────
+
+    function setFeedback (index) {
       if (fbLocked) return
       currentFb = index
       const s = fbStates[index]
@@ -667,11 +719,10 @@
       document.getElementById('feedback-widget').style.backgroundColor = s.bg
 
       // Title
-      const title = document.getElementById('fb-title')
-      title.style.color = s.accent
+      document.getElementById('fb-title').style.color = s.accent
 
       // Eyes
-      ;['fb-eye-l','fb-eye-r'].forEach(id => {
+      ;['fb-eye-l', 'fb-eye-r'].forEach(id => {
         const el = document.getElementById(id)
         el.style.width = s.eyeW + 'px'
         el.style.height = s.eyeH + 'px'
@@ -699,40 +750,50 @@
       ind.style.transform = `translateX(-50%) rotate(${s.indRot}deg)`
       document.getElementById('fb-ind-path').style.stroke = s.path
 
-      // Bottom labels opacity
+      // Bottom labels + counters color
       for (let i = 0; i < 3; i++) {
         const lbl = document.getElementById(`fb-lbl-${i}`)
         lbl.style.color = s.accent
         lbl.style.opacity = i === index ? '1' : '0.5'
+
+        const cnt = document.getElementById(`fb-count-${i}`)
+        cnt.style.color = s.accent
+        cnt.style.opacity = i === index ? '0.8' : '0.4'
       }
 
-      // Show thanks message for non-zero selections after a moment
-      if (index > 0) {
-        setTimeout(() => {
-          if (currentFb !== index) return
-          fbLocked = true
-          const thanks = document.getElementById('fb-thanks')
-          document.getElementById('fb-thanks-text').textContent = s.thanks
-          document.getElementById('fb-thanks-text').style.color = s.accent
-          document.getElementById('fb-thanks-sub').textContent = s.sub
-          document.getElementById('fb-thanks-sub').style.color = s.accent
-          thanks.style.opacity = '1'
-          thanks.style.transform = 'translateY(0)'
-          localStorage.setItem('sarathi-feedback', JSON.stringify({ level: index }))
-        }, 800)
-      }
+      // Lock after choice, show thanks, increment counter
+      setTimeout(() => {
+        if (currentFb !== index) return
+        fbLocked = true
+
+        // Increment counter
+        const counts = loadCounts()
+        counts[index] = (counts[index] || 0) + 1
+        saveCounts(counts)
+        renderCounts(counts, s.accent)
+        animateCount(index)
+
+        // Show thanks message
+        const thanks = document.getElementById('fb-thanks')
+        document.getElementById('fb-thanks-text').textContent = s.thanks
+        document.getElementById('fb-thanks-text').style.color = s.accent
+        document.getElementById('fb-thanks-sub').textContent = s.sub
+        document.getElementById('fb-thanks-sub').style.color = s.accent
+        thanks.style.opacity = '1'
+        thanks.style.transform = 'translateY(0)'
+
+        // Disable dot buttons visually
+        for (let i = 0; i < 3; i++) {
+          document.getElementById(`fb-dot-${i}`).style.cursor = 'default'
+          document.getElementById(`fb-dot-${i}`).style.opacity = i === index ? '1' : '0.4'
+        }
+      }, 800)
     }
 
-    // Restore previous feedback
-    const saved = localStorage.getItem('sarathi-feedback')
-    if (saved) {
-      const { level } = JSON.parse(saved)
-      setFeedback(level)
-      fbLocked = true
-      const thanks = document.getElementById('fb-thanks')
-      thanks.style.opacity = '1'
-      thanks.style.transform = 'translateY(0)'
-    }
+    // ── INIT ──────────────────────────────────────────────
+    // Load and display counts, but don't lock — fresh vote every visit
+    const initCounts = loadCounts()
+    renderCounts(initCounts, '#2e1065')
   </script>
 
   <!-- ════════════════════════════════════════════════════════════════════════ -->
