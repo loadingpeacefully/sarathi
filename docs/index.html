@@ -552,6 +552,229 @@
   </section>
 
   <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <!-- REACTIONS -->
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
+  <section class="py-24 px-6 gradient-subtle" id="react">
+    <div class="max-w-2xl mx-auto text-center">
+      <p class="text-sm font-600 text-brand-400 uppercase tracking-wider mb-3">You made it to the end</p>
+      <h2 class="font-heading text-3xl lg:text-4xl font-800 text-neutral-650 mb-4">
+        What's your gut feeling?
+      </h2>
+      <p class="text-base text-neutral-450 mb-12">
+        Tap one. No login, no form. Just a vibe check.
+      </p>
+
+      <div class="flex justify-center gap-4 md:gap-6 flex-wrap mb-10" id="reaction-buttons">
+        <button onclick="react(this, '🔥', 'This has legs')" class="reaction-btn group">
+          <span class="reaction-emoji">🔥</span>
+          <span class="reaction-label">This has legs</span>
+        </button>
+        <button onclick="react(this, '🤔', 'Interesting, tell me more')" class="reaction-btn group">
+          <span class="reaction-emoji">🤔</span>
+          <span class="reaction-label">Tell me more</span>
+        </button>
+        <button onclick="react(this, '💜', 'Love the vision')" class="reaction-btn group">
+          <span class="reaction-emoji">💜</span>
+          <span class="reaction-label">Love the vision</span>
+        </button>
+        <button onclick="react(this, '🚀', 'Ship it yesterday')" class="reaction-btn group">
+          <span class="reaction-emoji">🚀</span>
+          <span class="reaction-label">Ship it</span>
+        </button>
+      </div>
+
+      <!-- Post-reaction state -->
+      <div id="post-reaction" class="hidden">
+        <div id="burst-container" class="relative h-32 mb-6">
+          <!-- Emoji burst fills here via JS -->
+        </div>
+        <p class="font-heading text-2xl font-800 text-neutral-650 mb-2" id="reaction-thanks"></p>
+        <p class="text-base text-neutral-450" id="reaction-subtext"></p>
+
+        <!-- Optional message -->
+        <div class="mt-8 max-w-md mx-auto" id="message-box">
+          <p class="text-sm text-neutral-450 mb-3">Want to add a thought? (totally optional)</p>
+          <div class="flex gap-2">
+            <input id="feedback-input" type="text" placeholder="Type something nice... or brutally honest"
+              class="flex-1 px-4 py-3 rounded-xl border border-neutral-150 bg-white font-body text-sm text-neutral-650 outline-none focus:border-brand-500 transition-colors" maxlength="280" />
+            <button onclick="sendMessage()" id="send-btn"
+              class="px-5 py-3 bg-brand-500 text-white font-heading font-700 text-sm rounded-xl hover:bg-brand-600 transition-colors whitespace-nowrap">
+              Send
+            </button>
+          </div>
+        </div>
+
+        <!-- After message sent -->
+        <div id="message-sent" class="hidden mt-8">
+          <div class="inline-flex items-center gap-2 bg-green-50 text-green-700 font-600 text-sm px-5 py-2.5 rounded-full border border-green-200">
+            <span>&#10003;</span> Noted. Means a lot.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .reaction-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 20px;
+      background: white;
+      border: 2px solid #C1CCD7;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 100px;
+    }
+
+    .reaction-btn:hover {
+      border-color: #4D3BC2;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(77, 59, 194, 0.15);
+    }
+
+    .reaction-btn:active { transform: translateY(-2px) scale(0.97); }
+
+    .reaction-btn.selected {
+      border-color: #4D3BC2;
+      background: #EDEBF9;
+      transform: scale(1.05);
+    }
+
+    .reaction-emoji {
+      font-size: 36px;
+      line-height: 1;
+      transition: transform 0.2s ease;
+    }
+
+    .reaction-btn:hover .reaction-emoji { transform: scale(1.2); }
+
+    .reaction-label {
+      font-family: 'Nunito', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: #51667B;
+    }
+
+    .burst-emoji {
+      position: absolute;
+      font-size: 28px;
+      animation: burst 1.2s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes burst {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.5) rotate(0deg); }
+      50% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1.2) rotate(var(--rot)); }
+      100% { opacity: 0; transform: translate(var(--tx), calc(var(--ty) + 30px)) scale(0.6) rotate(var(--rot)); }
+    }
+
+    @keyframes pop-in {
+      0% { opacity: 0; transform: scale(0.5) translateY(20px); }
+      50% { transform: scale(1.05) translateY(-5px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .pop-in { animation: pop-in 0.4s ease-out forwards; }
+  </style>
+
+  <script>
+    let hasReacted = false
+
+    function react(btn, emoji, label) {
+      if (hasReacted) return
+      hasReacted = true
+
+      // Highlight selected button
+      btn.classList.add('selected')
+
+      // Disable all buttons
+      document.querySelectorAll('.reaction-btn').forEach(b => {
+        if (b !== btn) b.style.opacity = '0.4'
+        b.style.pointerEvents = 'none'
+      })
+
+      // Burst animation
+      const container = document.getElementById('burst-container')
+      for (let i = 0; i < 12; i++) {
+        const span = document.createElement('span')
+        span.className = 'burst-emoji'
+        span.textContent = emoji
+        span.style.left = '50%'
+        span.style.top = '50%'
+        const angle = (i / 12) * 360
+        const distance = 60 + Math.random() * 80
+        span.style.setProperty('--tx', `${Math.cos(angle * Math.PI / 180) * distance}px`)
+        span.style.setProperty('--ty', `${Math.sin(angle * Math.PI / 180) * distance * -0.7}px`)
+        span.style.setProperty('--rot', `${(Math.random() - 0.5) * 60}deg`)
+        span.style.animationDelay = `${i * 0.05}s`
+        container.appendChild(span)
+      }
+
+      // Show thank you
+      const thanks = {
+        '🔥': { title: 'Fire. Noted.', sub: 'That energy is fuel to keep building.' },
+        '🤔': { title: 'Curiosity is a great sign.', sub: "Happy to walk you through it anytime." },
+        '💜': { title: 'The feeling is mutual.', sub: 'This one was built with heart.' },
+        '🚀': { title: "Say less.", sub: "Let's find time to talk about next steps." }
+      }
+
+      setTimeout(() => {
+        document.getElementById('reaction-buttons').style.display = 'none'
+        const postReaction = document.getElementById('post-reaction')
+        postReaction.classList.remove('hidden')
+        postReaction.classList.add('pop-in')
+        document.getElementById('reaction-thanks').textContent = thanks[emoji].title
+        document.getElementById('reaction-subtext').textContent = thanks[emoji].sub
+        document.getElementById('feedback-input').focus()
+      }, 600)
+
+      // Log to console (visible if someone checks, useful for you)
+      console.log(`[Sarathi Feedback] Reaction: ${emoji} — "${label}" at ${new Date().toISOString()}`)
+
+      // Store in localStorage so it persists
+      localStorage.setItem('sarathi-reaction', JSON.stringify({
+        emoji, label, time: new Date().toISOString(), ref: new URLSearchParams(window.location.search).get('ref') || 'direct'
+      }))
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('feedback-input')
+      const message = input.value.trim()
+      if (!message) return
+
+      // Store message
+      const existing = JSON.parse(localStorage.getItem('sarathi-reaction') || '{}')
+      existing.message = message
+      localStorage.setItem('sarathi-reaction', JSON.stringify(existing))
+
+      console.log(`[Sarathi Feedback] Message: "${message}" at ${new Date().toISOString()}`)
+
+      // Swap UI
+      document.getElementById('message-box').classList.add('hidden')
+      const sent = document.getElementById('message-sent')
+      sent.classList.remove('hidden')
+      sent.classList.add('pop-in')
+    }
+
+    // Check if already reacted
+    if (localStorage.getItem('sarathi-reaction')) {
+      const data = JSON.parse(localStorage.getItem('sarathi-reaction'))
+      document.querySelectorAll('.reaction-btn').forEach(b => {
+        b.style.pointerEvents = 'none'
+        b.style.opacity = '0.4'
+      })
+      hasReacted = true
+      const msg = document.createElement('p')
+      msg.className = 'text-sm text-neutral-250 font-600 mt-4'
+      msg.textContent = `You already shared your ${data.emoji} — thank you!`
+      document.getElementById('reaction-buttons').after(msg)
+    }
+  </script>
+
+  <!-- ════════════════════════════════════════════════════════════════════════ -->
   <!-- FOOTER -->
   <!-- ════════════════════════════════════════════════════════════════════════ -->
   <footer class="gradient-hero py-12 px-6">
