@@ -558,7 +558,6 @@
     <div id="feedback-widget" class="relative flex items-center justify-center overflow-hidden transition-all duration-700 ease-out" style="background-color: #fef3c7; min-height: 580px;">
       <div class="flex flex-col items-center justify-center p-6 w-full max-w-[460px]">
 
-        <!-- Question -->
         <h3 id="fb-title" class="font-heading text-xl font-700 text-center mb-10 transition-colors duration-700" style="color: #92400e;">
           How's the idea?
         </h3>
@@ -569,7 +568,7 @@
             <div id="fb-eye-l" class="transition-all duration-700 ease-out" style="width:80px;height:30px;border-radius:36px;background:#92400e;"></div>
             <div id="fb-eye-r" class="transition-all duration-700 ease-out" style="width:80px;height:30px;border-radius:36px;background:#92400e;"></div>
           </div>
-          <div id="fb-smile-wrap" class="flex items-center justify-center w-16 h-16 mt-2 transition-transform duration-700 ease-out" style="transform:rotate(0deg);">
+          <div class="flex items-center justify-center w-16 h-16 mt-2">
             <svg width="100%" height="100%" viewBox="0 0 100 60" fill="none">
               <path id="fb-smile-path" d="M15 25 Q50 45 85 25" stroke-width="10" stroke-linecap="round" class="transition-all duration-700" style="stroke:#92400e;" fill="none"/>
             </svg>
@@ -577,7 +576,7 @@
         </div>
 
         <!-- Sliding big label -->
-        <div class="w-full overflow-hidden pb-10 pt-6">
+        <div class="w-full overflow-hidden pb-8 pt-6">
           <div id="fb-labels" class="flex w-full transition-transform duration-700 ease-out" style="transform:translateX(-100%);">
             <div class="flex w-full shrink-0 items-center justify-center">
               <h1 class="text-6xl md:text-7xl font-black tracking-tight" style="color:#dc2626;">MEH!</h1>
@@ -591,42 +590,48 @@
           </div>
         </div>
 
-        <!-- Slider track -->
-        <div class="w-full px-2">
-          <div class="relative flex w-full items-center justify-between h-10">
-            <button onclick="setFeedback(0)" id="fb-dot-0" class="z-[2] h-7 w-7 rounded-full transition-all duration-500 cursor-pointer hover:scale-110 border-2 border-transparent" style="background:#f87171;"></button>
-            <button onclick="setFeedback(1)" id="fb-dot-1" class="z-[2] h-7 w-7 rounded-full transition-all duration-500 cursor-pointer hover:scale-110 border-2 border-transparent" style="background:#f59e0b;"></button>
-            <button onclick="setFeedback(2)" id="fb-dot-2" class="z-[2] h-7 w-7 rounded-full transition-all duration-500 cursor-pointer hover:scale-110 border-2 border-transparent" style="background:#22c55e;"></button>
-
-            <!-- Track -->
+        <!-- Slider — dots only, no separate indicator -->
+        <div class="w-full px-3">
+          <!-- Track + dots -->
+          <div class="relative flex w-full items-center justify-between h-12">
+            <!-- Gradient track line -->
             <div class="absolute top-1/2 h-1.5 w-full -translate-y-1/2 rounded-full" style="background: linear-gradient(to right, #f87171, #f59e0b, #22c55e);"></div>
 
-            <!-- Sliding indicator -->
-            <div id="fb-indicator" class="absolute z-[3] flex h-11 w-11 -translate-x-1/2 items-center justify-center rounded-full p-2 transition-all duration-700 ease-out shadow-lg" style="left:50%;background:#92400e;">
-              <svg width="100%" height="100%" viewBox="0 0 100 60" fill="none">
-                <path d="M15 25 Q50 45 85 25" stroke-width="10" stroke-linecap="round" id="fb-ind-path" class="transition-all duration-700" style="stroke:#fef3c7;" fill="none"/>
-              </svg>
-            </div>
+            <!-- Dots — the selected one scales up to BE the indicator -->
+            <button onclick="selectFeedback(0)" id="fb-dot-0" class="fb-dot relative z-[2] h-8 w-8 rounded-full transition-all duration-500 cursor-pointer border-3 border-transparent" style="background:#f87171;"></button>
+            <button onclick="selectFeedback(1)" id="fb-dot-1" class="fb-dot relative z-[2] h-8 w-8 rounded-full transition-all duration-500 cursor-pointer border-3 border-transparent" style="background:#f59e0b;"></button>
+            <button onclick="selectFeedback(2)" id="fb-dot-2" class="fb-dot relative z-[2] h-8 w-8 rounded-full transition-all duration-500 cursor-pointer border-3 border-transparent" style="background:#22c55e;"></button>
           </div>
 
-          <!-- Labels under dots -->
-          <div class="flex w-full items-center justify-between pt-4">
-            <span id="fb-lbl-0" class="w-full text-center font-700 text-sm transition-all duration-500" style="color:#92400e;opacity:0.5;">Meh!</span>
-            <span id="fb-lbl-1" class="w-full text-center font-700 text-sm transition-all duration-500" style="color:#92400e;opacity:1;">Great!</span>
-            <span id="fb-lbl-2" class="w-full text-center font-700 text-sm transition-all duration-500" style="color:#92400e;opacity:0.5;">Ship It!</span>
-          </div>
-          <!-- Vote counters -->
-          <div class="flex w-full items-center justify-between pt-0.5">
-            <span id="fb-count-0" class="w-full text-center font-800 text-[11px] transition-all duration-500" style="color:#92400e;opacity:0.35;"></span>
-            <span id="fb-count-1" class="w-full text-center font-800 text-[11px] transition-all duration-500" style="color:#92400e;opacity:0.35;"></span>
-            <span id="fb-count-2" class="w-full text-center font-800 text-[11px] transition-all duration-500" style="color:#92400e;opacity:0.35;"></span>
+          <!-- Labels + counters -->
+          <div class="flex w-full items-center justify-between pt-3">
+            <div class="w-full text-center">
+              <span id="fb-lbl-0" class="block font-700 text-sm transition-all duration-500" style="color:#92400e;opacity:0.5;">Meh!</span>
+              <span id="fb-count-0" class="block font-800 text-[11px] mt-0.5 transition-all duration-500" style="color:#92400e;opacity:0.3;">0</span>
+            </div>
+            <div class="w-full text-center">
+              <span id="fb-lbl-1" class="block font-700 text-sm transition-all duration-500" style="color:#92400e;opacity:1;">Great!</span>
+              <span id="fb-count-1" class="block font-800 text-[11px] mt-0.5 transition-all duration-500" style="color:#92400e;opacity:0.3;">1</span>
+            </div>
+            <div class="w-full text-center">
+              <span id="fb-lbl-2" class="block font-700 text-sm transition-all duration-500" style="color:#92400e;opacity:0.5;">Ship It!</span>
+              <span id="fb-count-2" class="block font-800 text-[11px] mt-0.5 transition-all duration-500" style="color:#92400e;opacity:0.3;">2</span>
+            </div>
           </div>
         </div>
 
-        <!-- Post-feedback message -->
-        <div id="fb-thanks" class="mt-8 text-center opacity-0 transition-all duration-700" style="transform:translateY(16px);">
-          <p id="fb-thanks-text" class="font-heading text-lg font-700" style="color:#92400e;"></p>
-          <p id="fb-thanks-sub" class="text-sm mt-1 opacity-70" style="color:#92400e;"></p>
+        <!-- Submit CTA — hidden until user selects, hidden after submit -->
+        <div id="fb-submit-wrap" class="mt-8 opacity-0 transition-all duration-500" style="transform:translateY(10px);pointer-events:none;">
+          <button onclick="submitFeedback()" id="fb-submit-btn" class="font-heading font-700 text-base px-10 py-3 rounded-xl shadow-md transition-all duration-500 cursor-pointer hover:shadow-lg active:scale-95" style="background:#92400e;color:#fef3c7;">
+            Submit
+          </button>
+        </div>
+
+        <!-- Confirmation — hidden until submitted -->
+        <div id="fb-confirm" class="mt-8 text-center opacity-0 transition-all duration-700" style="transform:translateY(16px) scale(0.9);">
+          <div id="fb-confirm-emoji" class="text-5xl mb-3"></div>
+          <p id="fb-confirm-text" class="font-heading text-xl font-800" style="color:#92400e;"></p>
+          <p id="fb-confirm-sub" class="text-sm mt-2 opacity-70" style="color:#92400e;"></p>
         </div>
 
       </div>
@@ -634,101 +639,97 @@
   </section>
 
   <style>
+    .fb-dot { border-width: 3px; box-shadow: 0 0 0 0 transparent; }
+    .fb-dot.selected {
+      transform: scale(1.5) !important;
+      border-color: #fff !important;
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.3);
+    }
+    .fb-dot:not(.selected):hover { transform: scale(1.15); }
+    .fb-dot.locked { cursor: default; pointer-events: none; }
+
     @keyframes count-pop {
       0% { transform: scale(1); }
-      50% { transform: scale(1.5); }
+      40% { transform: scale(1.8); }
       100% { transform: scale(1); }
     }
-    .count-pop { animation: count-pop 0.35s ease-out; }
+    .count-pop { animation: count-pop 0.4s ease-out; }
 
-    #feedback-widget button:active { transform: scale(0.9); }
+    @keyframes confirm-bounce {
+      0% { opacity: 0; transform: translateY(16px) scale(0.8); }
+      50% { transform: translateY(-4px) scale(1.05); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .confirm-bounce { animation: confirm-bounce 0.6s ease-out forwards; }
+
+    @keyframes emoji-spin {
+      0% { transform: scale(0) rotate(-180deg); }
+      60% { transform: scale(1.3) rotate(10deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .emoji-spin { animation: emoji-spin 0.5s ease-out forwards; }
   </style>
 
   <script>
     const fbStates = [
       {
-        bg: '#fee2e2', accent: '#991b1b', track: '#f87171', path: '#fee2e2',
+        bg: '#fee2e2', accent: '#991b1b', btnBg: '#991b1b', btnText: '#fee2e2',
         eyeW: 48, eyeH: 48, eyeR: '100%',
         smilePath: 'M15 35 Q50 15 85 35',
-        indPath: 'M15 35 Q50 15 85 35',
-        indLeft: '0%',
         labelX: '0%',
+        emoji: '😬',
         thanks: 'Honest. Respect that.', sub: 'Not every idea lands — thanks for the candor.'
       },
       {
-        bg: '#fef3c7', accent: '#92400e', track: '#f59e0b', path: '#fef3c7',
+        bg: '#fef3c7', accent: '#92400e', btnBg: '#92400e', btnText: '#fef3c7',
         eyeW: 80, eyeH: 30, eyeR: '36px',
         smilePath: 'M15 25 Q50 45 85 25',
-        indPath: 'M15 25 Q50 45 85 25',
-        indLeft: '50%',
         labelX: '-100%',
+        emoji: '🙌',
         thanks: 'Glad it sparked something.', sub: 'Happy to walk you through it anytime.'
       },
       {
-        bg: '#dcfce7', accent: '#166534', track: '#22c55e', path: '#dcfce7',
+        bg: '#dcfce7', accent: '#166534', btnBg: '#166534', btnText: '#dcfce7',
         eyeW: 100, eyeH: 100, eyeR: '100%',
         smilePath: 'M10 20 Q50 70 90 20',
-        indPath: 'M10 20 Q50 70 90 20',
-        indLeft: '100%',
         labelX: '-200%',
+        emoji: '🚀',
         thanks: "Say less. Let's build this.", sub: 'That reaction just made the late nights worth it.'
       }
     ]
 
-    let currentFb = 1  // Start at "Great" (neutral-positive)
-    let fbLocked = false
-    let lockTimer = null
-
-    const SEED_COUNTS = { 0: 3, 1: 14, 2: 29 }
+    let currentFb = 1
+    let fbSubmitted = false
+    const SEED = { 0: 0, 1: 1, 2: 2 }
 
     function loadCounts () {
       try {
         const raw = localStorage.getItem('sarathi-fb-counts')
         if (raw) return JSON.parse(raw)
       } catch (e) {}
-      localStorage.setItem('sarathi-fb-counts', JSON.stringify(SEED_COUNTS))
-      return { ...SEED_COUNTS }
+      localStorage.setItem('sarathi-fb-counts', JSON.stringify(SEED))
+      return { ...SEED }
     }
 
-    function saveCounts (counts) {
-      localStorage.setItem('sarathi-fb-counts', JSON.stringify(counts))
+    function saveCounts (c) {
+      localStorage.setItem('sarathi-fb-counts', JSON.stringify(c))
     }
 
-    function renderCounts (counts, accentColor) {
+    function renderCounts (counts, accent) {
       for (let i = 0; i < 3; i++) {
         const el = document.getElementById(`fb-count-${i}`)
-        const n = counts[i] || 0
-        el.textContent = n > 0 ? n : ''
-        el.style.color = accentColor
+        el.textContent = counts[i] || 0
+        el.style.color = accent
       }
     }
 
-    function animateCount (index) {
-      const el = document.getElementById(`fb-count-${index}`)
-      el.classList.remove('count-pop')
-      void el.offsetWidth
-      el.classList.add('count-pop')
-      el.style.opacity = '0.7'
-    }
-
-    function setFeedback (index) {
-      if (fbLocked) return
-
-      // Cancel any pending lock from a previous quick click
-      if (lockTimer) { clearTimeout(lockTimer); lockTimer = null }
-
-      // Hide thanks if switching
-      const thanks = document.getElementById('fb-thanks')
-      thanks.style.opacity = '0'
-      thanks.style.transform = 'translateY(16px)'
-
+    function selectFeedback (index) {
+      if (fbSubmitted) return
       currentFb = index
       const s = fbStates[index]
 
-      // Background
+      // Background + title
       document.getElementById('feedback-widget').style.backgroundColor = s.bg
-
-      // Title
       document.getElementById('fb-title').style.color = s.accent
 
       // Eyes
@@ -740,28 +741,19 @@
         el.style.background = s.accent
       })
 
-      // Smile — change the path shape instead of rotating
+      // Smile
       document.getElementById('fb-smile-path').setAttribute('d', s.smilePath)
       document.getElementById('fb-smile-path').style.stroke = s.accent
 
-      // Big label slide
+      // Big label
       document.getElementById('fb-labels').style.transform = `translateX(${s.labelX})`
 
-      // Indicator
-      const ind = document.getElementById('fb-indicator')
-      ind.style.left = s.indLeft
-      ind.style.background = s.accent
-      document.getElementById('fb-ind-path').setAttribute('d', s.indPath)
-      document.getElementById('fb-ind-path').style.stroke = s.path
+      // Dots — selected one scales up
+      document.querySelectorAll('.fb-dot').forEach((dot, i) => {
+        dot.classList.toggle('selected', i === index)
+      })
 
-      // Dot highlights — selected dot gets a white ring
-      for (let i = 0; i < 3; i++) {
-        const dot = document.getElementById(`fb-dot-${i}`)
-        dot.style.borderColor = i === index ? '#fff' : 'transparent'
-        dot.style.transform = i === index ? 'scale(1.2)' : 'scale(1)'
-      }
-
-      // Labels + counters
+      // Labels + counters color
       for (let i = 0; i < 3; i++) {
         document.getElementById(`fb-lbl-${i}`).style.color = s.accent
         document.getElementById(`fb-lbl-${i}`).style.opacity = i === index ? '1' : '0.4'
@@ -769,38 +761,66 @@
         document.getElementById(`fb-count-${i}`).style.opacity = i === index ? '0.6' : '0.25'
       }
 
-      // Lock after 1.2s if user doesn't switch again
-      lockTimer = setTimeout(() => {
-        if (currentFb !== index) return
-        fbLocked = true
+      // Show submit button
+      const wrap = document.getElementById('fb-submit-wrap')
+      wrap.style.opacity = '1'
+      wrap.style.transform = 'translateY(0)'
+      wrap.style.pointerEvents = 'auto'
 
-        // Increment counter
-        const counts = loadCounts()
-        counts[index] = (counts[index] || 0) + 1
-        saveCounts(counts)
-        renderCounts(counts, s.accent)
-        animateCount(index)
-
-        // Show thanks
-        document.getElementById('fb-thanks-text').textContent = s.thanks
-        document.getElementById('fb-thanks-text').style.color = s.accent
-        document.getElementById('fb-thanks-sub').textContent = s.sub
-        document.getElementById('fb-thanks-sub').style.color = s.accent
-        thanks.style.opacity = '1'
-        thanks.style.transform = 'translateY(0)'
-
-        // Dim unselected dots
-        for (let i = 0; i < 3; i++) {
-          const dot = document.getElementById(`fb-dot-${i}`)
-          dot.style.cursor = 'default'
-          if (i !== index) dot.style.opacity = '0.3'
-        }
-      }, 1200)
+      // Style submit button to match state
+      const btn = document.getElementById('fb-submit-btn')
+      btn.style.background = s.btnBg
+      btn.style.color = s.btnText
     }
 
-    // Init — start at state 1 (Great/neutral) with counts visible
-    const initCounts = loadCounts()
-    renderCounts(initCounts, '#92400e')
+    function submitFeedback () {
+      if (fbSubmitted) return
+      fbSubmitted = true
+
+      const s = fbStates[currentFb]
+
+      // Increment and save count
+      const counts = loadCounts()
+      counts[currentFb] = (counts[currentFb] || 0) + 1
+      saveCounts(counts)
+      renderCounts(counts, s.accent)
+
+      // Animate the selected counter
+      const countEl = document.getElementById(`fb-count-${currentFb}`)
+      countEl.classList.remove('count-pop')
+      void countEl.offsetWidth
+      countEl.classList.add('count-pop')
+      countEl.style.opacity = '0.8'
+
+      // Hide submit button
+      const wrap = document.getElementById('fb-submit-wrap')
+      wrap.style.opacity = '0'
+      wrap.style.transform = 'translateY(10px)'
+      wrap.style.pointerEvents = 'none'
+
+      // Dim unselected dots
+      document.querySelectorAll('.fb-dot').forEach((dot, i) => {
+        dot.classList.add('locked')
+        if (i !== currentFb) dot.style.opacity = '0.3'
+      })
+
+      // Show confirmation with animation
+      setTimeout(() => {
+        const confirm = document.getElementById('fb-confirm')
+        const emoji = document.getElementById('fb-confirm-emoji')
+        emoji.textContent = s.emoji
+        emoji.className = 'text-5xl mb-3 emoji-spin'
+        document.getElementById('fb-confirm-text').textContent = s.thanks
+        document.getElementById('fb-confirm-text').style.color = s.accent
+        document.getElementById('fb-confirm-sub').textContent = s.sub
+        document.getElementById('fb-confirm-sub').style.color = s.accent
+        confirm.className = 'mt-8 text-center confirm-bounce'
+      }, 300)
+    }
+
+    // Init — show counts, start at Great (index 1)
+    renderCounts(loadCounts(), '#92400e')
+    document.getElementById('fb-dot-1').classList.add('selected')
   </script>
 
   <!-- ════════════════════════════════════════════════════════════════════════ -->
