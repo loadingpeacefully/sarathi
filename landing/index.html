@@ -704,15 +704,15 @@
 
     function loadCounts () {
       try {
-        const raw = localStorage.getItem('sarathi-fb-counts')
+        const raw = localStorage.getItem('sarathi-fb-v2')
         if (raw) return JSON.parse(raw)
       } catch (e) {}
-      localStorage.setItem('sarathi-fb-counts', JSON.stringify(SEED))
+      localStorage.setItem('sarathi-fb-v2', JSON.stringify(SEED))
       return { ...SEED }
     }
 
     function saveCounts (c) {
-      localStorage.setItem('sarathi-fb-counts', JSON.stringify(c))
+      localStorage.setItem('sarathi-fb-v2', JSON.stringify(c))
     }
 
     function renderCounts (counts, accent) {
