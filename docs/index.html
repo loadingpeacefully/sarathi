@@ -732,12 +732,9 @@
       }, 600)
 
       // Log to console (visible if someone checks, useful for you)
-      console.log(`[Sarathi Feedback] Reaction: ${emoji} — "${label}" at ${new Date().toISOString()}`)
 
       // Store in localStorage so it persists
-      localStorage.setItem('sarathi-reaction', JSON.stringify({
-        emoji, label, time: new Date().toISOString(), ref: new URLSearchParams(window.location.search).get('ref') || 'direct'
-      }))
+      localStorage.setItem('sarathi-reaction', JSON.stringify({ emoji, label }))
     }
 
     function sendMessage() {
@@ -749,8 +746,6 @@
       const existing = JSON.parse(localStorage.getItem('sarathi-reaction') || '{}')
       existing.message = message
       localStorage.setItem('sarathi-reaction', JSON.stringify(existing))
-
-      console.log(`[Sarathi Feedback] Message: "${message}" at ${new Date().toISOString()}`)
 
       // Swap UI
       document.getElementById('message-box').classList.add('hidden')
