@@ -552,220 +552,186 @@
   </section>
 
   <!-- ════════════════════════════════════════════════════════════════════════ -->
-  <!-- REACTIONS -->
+  <!-- FEEDBACK SLIDER -->
   <!-- ════════════════════════════════════════════════════════════════════════ -->
-  <section class="py-24 px-6 gradient-subtle" id="react">
-    <div class="max-w-2xl mx-auto text-center">
-      <p class="text-sm font-600 text-brand-400 uppercase tracking-wider mb-3">You made it to the end</p>
-      <h2 class="font-heading text-3xl lg:text-4xl font-800 text-neutral-650 mb-4">
-        What's your gut feeling?
-      </h2>
-      <p class="text-base text-neutral-450 mb-12">
-        Tap one. No login, no form. Just a vibe check.
-      </p>
+  <section id="react">
+    <div id="feedback-widget" class="relative flex items-center justify-center overflow-hidden transition-all duration-500 ease-out" style="background-color: #8B5CF6; min-height: 600px;">
+      <div class="flex flex-col items-center justify-center p-6 w-full max-w-[420px]">
 
-      <div class="flex justify-center gap-4 md:gap-6 flex-wrap mb-10" id="reaction-buttons">
-        <button onclick="react(this, '🔥', 'This has legs')" class="reaction-btn group">
-          <span class="reaction-emoji">🔥</span>
-          <span class="reaction-label">This has legs</span>
-        </button>
-        <button onclick="react(this, '🤔', 'Interesting, tell me more')" class="reaction-btn group">
-          <span class="reaction-emoji">🤔</span>
-          <span class="reaction-label">Tell me more</span>
-        </button>
-        <button onclick="react(this, '💜', 'Love the vision')" class="reaction-btn group">
-          <span class="reaction-emoji">💜</span>
-          <span class="reaction-label">Love the vision</span>
-        </button>
-        <button onclick="react(this, '🚀', 'Ship it yesterday')" class="reaction-btn group">
-          <span class="reaction-emoji">🚀</span>
-          <span class="reaction-label">Ship it</span>
-        </button>
-      </div>
+        <!-- Question -->
+        <h3 id="fb-title" class="font-heading text-xl font-700 text-center mb-10 w-72 transition-colors duration-500" style="color: #2e1065;">
+          How's the idea?
+        </h3>
 
-      <!-- Post-reaction state -->
-      <div id="post-reaction" class="hidden">
-        <div id="burst-container" class="relative h-32 mb-6">
-          <!-- Emoji burst fills here via JS -->
-        </div>
-        <p class="font-heading text-2xl font-800 text-neutral-650 mb-2" id="reaction-thanks"></p>
-        <p class="text-base text-neutral-450" id="reaction-subtext"></p>
-
-        <!-- Optional message -->
-        <div class="mt-8 max-w-md mx-auto" id="message-box">
-          <p class="text-sm text-neutral-450 mb-3">Want to add a thought? (totally optional)</p>
-          <div class="flex gap-2">
-            <input id="feedback-input" type="text" placeholder="Type something nice... or brutally honest"
-              class="flex-1 px-4 py-3 rounded-xl border border-neutral-150 bg-white font-body text-sm text-neutral-650 outline-none focus:border-brand-500 transition-colors" maxlength="280" />
-            <button onclick="sendMessage()" id="send-btn"
-              class="px-5 py-3 bg-brand-500 text-white font-heading font-700 text-sm rounded-xl hover:bg-brand-600 transition-colors whitespace-nowrap">
-              Send
-            </button>
+        <!-- Face -->
+        <div class="flex flex-col items-center justify-center h-[176px]">
+          <!-- Eyes -->
+          <div class="flex items-center justify-center gap-8">
+            <div id="fb-eye-l" class="transition-all duration-500 ease-out" style="width:56px;height:56px;border-radius:100%;background:#2e1065;"></div>
+            <div id="fb-eye-r" class="transition-all duration-500 ease-out" style="width:56px;height:56px;border-radius:100%;background:#2e1065;"></div>
+          </div>
+          <!-- Smile -->
+          <div id="fb-smile-wrap" class="flex items-center justify-center w-14 h-14 transition-transform duration-500 ease-out" style="transform:rotate(180deg);">
+            <svg width="100%" height="100%" viewBox="0 0 100 60" fill="none">
+              <path id="fb-smile-path" d="M10 30 Q50 70 90 30" stroke-width="12" stroke-linecap="round" class="transition-all duration-500" style="stroke:#2e1065;" fill="none"/>
+            </svg>
           </div>
         </div>
 
-        <!-- After message sent -->
-        <div id="message-sent" class="hidden mt-8">
-          <div class="inline-flex items-center gap-2 bg-green-50 text-green-700 font-600 text-sm px-5 py-2.5 rounded-full border border-green-200">
-            <span>&#10003;</span> Noted. Means a lot.
+        <!-- Sliding label -->
+        <div class="w-full overflow-hidden pb-14 pt-7">
+          <div id="fb-labels" class="flex w-full transition-transform duration-500 ease-out" style="transform:translateX(0%);">
+            <div class="flex w-full shrink-0 items-center justify-center">
+              <h1 class="text-6xl md:text-7xl font-black" style="color:#7c3aed;">MEH</h1>
+            </div>
+            <div class="flex w-full shrink-0 items-center justify-center">
+              <h1 class="text-6xl md:text-7xl font-black" style="color:#6d28d9;">INTERESTING</h1>
+            </div>
+            <div class="flex w-full shrink-0 items-center justify-center">
+              <h1 class="text-6xl md:text-7xl font-black" style="color:#166534;">SHIP IT!</h1>
+            </div>
           </div>
         </div>
+
+        <!-- Slider track -->
+        <div class="w-full">
+          <div class="relative flex w-full items-center justify-between">
+            <!-- Dot buttons -->
+            <button onclick="setFeedback(0)" id="fb-dot-0" class="z-[2] h-6 w-6 rounded-full transition-colors duration-500 cursor-pointer hover:scale-125" style="background:#7c3aed;"></button>
+            <button onclick="setFeedback(1)" id="fb-dot-1" class="z-[2] h-6 w-6 rounded-full transition-colors duration-500 cursor-pointer hover:scale-125" style="background:#7c3aed;"></button>
+            <button onclick="setFeedback(2)" id="fb-dot-2" class="z-[2] h-6 w-6 rounded-full transition-colors duration-500 cursor-pointer hover:scale-125" style="background:#7c3aed;"></button>
+
+            <!-- Track line -->
+            <div id="fb-track" class="absolute top-1/2 h-1 w-full -translate-y-1/2 transition-colors duration-500" style="background:#7c3aed;"></div>
+
+            <!-- Indicator (sliding smiley) -->
+            <div id="fb-indicator" class="absolute z-[3] flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full p-2 transition-all duration-500 ease-out" style="left:0%;background:#2e1065;transform:translateX(-50%) rotate(180deg);">
+              <svg width="100%" height="100%" viewBox="0 0 100 60" fill="none">
+                <path d="M10 30 Q50 70 90 30" stroke-width="12" stroke-linecap="round" id="fb-ind-path" class="transition-all duration-500" style="stroke:#8B5CF6;" fill="none"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Labels under dots -->
+          <div class="flex w-full items-center justify-between pt-6">
+            <span id="fb-lbl-0" class="w-full text-center font-600 text-sm transition-all duration-500" style="color:#2e1065;opacity:1;">Meh</span>
+            <span id="fb-lbl-1" class="w-full text-center font-600 text-sm transition-all duration-500" style="color:#2e1065;opacity:0.5;">Interesting</span>
+            <span id="fb-lbl-2" class="w-full text-center font-600 text-sm transition-all duration-500" style="color:#2e1065;opacity:0.5;">Ship it!</span>
+          </div>
+        </div>
+
+        <!-- Post-feedback message (hidden initially) -->
+        <div id="fb-thanks" class="mt-10 text-center opacity-0 transition-all duration-500" style="transform:translateY(20px);">
+          <p id="fb-thanks-text" class="font-heading text-lg font-700" style="color:#2e1065;"></p>
+          <p id="fb-thanks-sub" class="text-sm mt-1 opacity-80" style="color:#2e1065;"></p>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <style>
-    .reaction-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      padding: 16px 20px;
-      background: white;
-      border: 2px solid #C1CCD7;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      min-width: 100px;
-    }
-
-    .reaction-btn:hover {
-      border-color: #4D3BC2;
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(77, 59, 194, 0.15);
-    }
-
-    .reaction-btn:active { transform: translateY(-2px) scale(0.97); }
-
-    .reaction-btn.selected {
-      border-color: #4D3BC2;
-      background: #EDEBF9;
-      transform: scale(1.05);
-    }
-
-    .reaction-emoji {
-      font-size: 36px;
-      line-height: 1;
-      transition: transform 0.2s ease;
-    }
-
-    .reaction-btn:hover .reaction-emoji { transform: scale(1.2); }
-
-    .reaction-label {
-      font-family: 'Nunito', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      color: #51667B;
-    }
-
-    .burst-emoji {
-      position: absolute;
-      font-size: 28px;
-      animation: burst 1.2s ease-out forwards;
-      pointer-events: none;
-    }
-
-    @keyframes burst {
-      0% { opacity: 1; transform: translate(0, 0) scale(0.5) rotate(0deg); }
-      50% { opacity: 1; transform: translate(var(--tx), var(--ty)) scale(1.2) rotate(var(--rot)); }
-      100% { opacity: 0; transform: translate(var(--tx), calc(var(--ty) + 30px)) scale(0.6) rotate(var(--rot)); }
-    }
-
-    @keyframes pop-in {
-      0% { opacity: 0; transform: scale(0.5) translateY(20px); }
-      50% { transform: scale(1.05) translateY(-5px); }
-      100% { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    .pop-in { animation: pop-in 0.4s ease-out forwards; }
-  </style>
-
   <script>
-    let hasReacted = false
+    const fbStates = [
+      {
+        bg: '#8B5CF6', accent: '#2e1065', track: '#7c3aed', path: '#8B5CF6',
+        eyeW: 56, eyeH: 56, eyeR: '100%',
+        smileRot: 180, indRot: 180, indLeft: '0%',
+        labelX: '0%', labelColor: '#7c3aed',
+        thanks: '', sub: ''
+      },
+      {
+        bg: '#A78BFA', accent: '#1e1b4b', track: '#7c3aed', path: '#A78BFA',
+        eyeW: 100, eyeH: 20, eyeR: '36px',
+        smileRot: 180, indRot: 180, indLeft: '50%',
+        labelX: '-100%', labelColor: '#6d28d9',
+        thanks: 'Curiosity is a great sign.', sub: 'Happy to walk you through it anytime.'
+      },
+      {
+        bg: '#4ade80', accent: '#052e16', track: '#16a34a', path: '#4ade80',
+        eyeW: 120, eyeH: 120, eyeR: '100%',
+        smileRot: 0, indRot: 0, indLeft: '100%',
+        labelX: '-200%', labelColor: '#166534',
+        thanks: "Say less. Let's build this.", sub: 'That reaction just made the late nights worth it.'
+      }
+    ]
 
-    function react(btn, emoji, label) {
-      if (hasReacted) return
-      hasReacted = true
+    let currentFb = 0
+    let fbLocked = false
 
-      // Highlight selected button
-      btn.classList.add('selected')
+    function setFeedback(index) {
+      if (fbLocked) return
+      currentFb = index
+      const s = fbStates[index]
 
-      // Disable all buttons
-      document.querySelectorAll('.reaction-btn').forEach(b => {
-        if (b !== btn) b.style.opacity = '0.4'
-        b.style.pointerEvents = 'none'
+      // Background
+      document.getElementById('feedback-widget').style.backgroundColor = s.bg
+
+      // Title
+      const title = document.getElementById('fb-title')
+      title.style.color = s.accent
+
+      // Eyes
+      ;['fb-eye-l','fb-eye-r'].forEach(id => {
+        const el = document.getElementById(id)
+        el.style.width = s.eyeW + 'px'
+        el.style.height = s.eyeH + 'px'
+        el.style.borderRadius = s.eyeR
+        el.style.background = s.accent
       })
 
-      // Burst animation
-      const container = document.getElementById('burst-container')
-      for (let i = 0; i < 12; i++) {
-        const span = document.createElement('span')
-        span.className = 'burst-emoji'
-        span.textContent = emoji
-        span.style.left = '50%'
-        span.style.top = '50%'
-        const angle = (i / 12) * 360
-        const distance = 60 + Math.random() * 80
-        span.style.setProperty('--tx', `${Math.cos(angle * Math.PI / 180) * distance}px`)
-        span.style.setProperty('--ty', `${Math.sin(angle * Math.PI / 180) * distance * -0.7}px`)
-        span.style.setProperty('--rot', `${(Math.random() - 0.5) * 60}deg`)
-        span.style.animationDelay = `${i * 0.05}s`
-        container.appendChild(span)
+      // Smile
+      document.getElementById('fb-smile-wrap').style.transform = `rotate(${s.smileRot}deg)`
+      document.getElementById('fb-smile-path').style.stroke = s.accent
+
+      // Labels slide
+      document.getElementById('fb-labels').style.transform = `translateX(${s.labelX})`
+
+      // Track + dots
+      document.getElementById('fb-track').style.background = s.track
+      for (let i = 0; i < 3; i++) {
+        document.getElementById(`fb-dot-${i}`).style.background = s.track
       }
 
-      // Show thank you
-      const thanks = {
-        '🔥': { title: 'Fire. Noted.', sub: 'That energy is fuel to keep building.' },
-        '🤔': { title: 'Curiosity is a great sign.', sub: "Happy to walk you through it anytime." },
-        '💜': { title: 'The feeling is mutual.', sub: 'This one was built with heart.' },
-        '🚀': { title: "Say less.", sub: "Let's find time to talk about next steps." }
+      // Indicator
+      const ind = document.getElementById('fb-indicator')
+      ind.style.left = s.indLeft
+      ind.style.background = s.accent
+      ind.style.transform = `translateX(-50%) rotate(${s.indRot}deg)`
+      document.getElementById('fb-ind-path').style.stroke = s.path
+
+      // Bottom labels opacity
+      for (let i = 0; i < 3; i++) {
+        const lbl = document.getElementById(`fb-lbl-${i}`)
+        lbl.style.color = s.accent
+        lbl.style.opacity = i === index ? '1' : '0.5'
       }
 
-      setTimeout(() => {
-        document.getElementById('reaction-buttons').style.display = 'none'
-        const postReaction = document.getElementById('post-reaction')
-        postReaction.classList.remove('hidden')
-        postReaction.classList.add('pop-in')
-        document.getElementById('reaction-thanks').textContent = thanks[emoji].title
-        document.getElementById('reaction-subtext').textContent = thanks[emoji].sub
-        document.getElementById('feedback-input').focus()
-      }, 600)
-
-      // Log to console (visible if someone checks, useful for you)
-
-      // Store in localStorage so it persists
-      localStorage.setItem('sarathi-reaction', JSON.stringify({ emoji, label }))
+      // Show thanks message for non-zero selections after a moment
+      if (index > 0) {
+        setTimeout(() => {
+          if (currentFb !== index) return
+          fbLocked = true
+          const thanks = document.getElementById('fb-thanks')
+          document.getElementById('fb-thanks-text').textContent = s.thanks
+          document.getElementById('fb-thanks-text').style.color = s.accent
+          document.getElementById('fb-thanks-sub').textContent = s.sub
+          document.getElementById('fb-thanks-sub').style.color = s.accent
+          thanks.style.opacity = '1'
+          thanks.style.transform = 'translateY(0)'
+          localStorage.setItem('sarathi-feedback', JSON.stringify({ level: index }))
+        }, 800)
+      }
     }
 
-    function sendMessage() {
-      const input = document.getElementById('feedback-input')
-      const message = input.value.trim()
-      if (!message) return
-
-      // Store message
-      const existing = JSON.parse(localStorage.getItem('sarathi-reaction') || '{}')
-      existing.message = message
-      localStorage.setItem('sarathi-reaction', JSON.stringify(existing))
-
-      // Swap UI
-      document.getElementById('message-box').classList.add('hidden')
-      const sent = document.getElementById('message-sent')
-      sent.classList.remove('hidden')
-      sent.classList.add('pop-in')
-    }
-
-    // Check if already reacted
-    if (localStorage.getItem('sarathi-reaction')) {
-      const data = JSON.parse(localStorage.getItem('sarathi-reaction'))
-      document.querySelectorAll('.reaction-btn').forEach(b => {
-        b.style.pointerEvents = 'none'
-        b.style.opacity = '0.4'
-      })
-      hasReacted = true
-      const msg = document.createElement('p')
-      msg.className = 'text-sm text-neutral-250 font-600 mt-4'
-      msg.textContent = `You already shared your ${data.emoji} — thank you!`
-      document.getElementById('reaction-buttons').after(msg)
+    // Restore previous feedback
+    const saved = localStorage.getItem('sarathi-feedback')
+    if (saved) {
+      const { level } = JSON.parse(saved)
+      setFeedback(level)
+      fbLocked = true
+      const thanks = document.getElementById('fb-thanks')
+      thanks.style.opacity = '1'
+      thanks.style.transform = 'translateY(0)'
     }
   </script>
 
